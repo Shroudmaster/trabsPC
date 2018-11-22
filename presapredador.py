@@ -14,7 +14,16 @@ import sys
 	Plotar esta merda toda, hence matplotlib. Fazer uns graficos bonitoes pra ficar maneiro no relatorio
 	Nunca mais esquecer fone de ouvido quando eu for trabalhar nessa merda
 	Mais alguma coisa?
+	natPrey = alfa
+	mortprey = b
+
 '''
+def coefFertilidade(t, natPrey):
+	return (1.5 + np.sin(t)) * natPrey
+
+def praga():
+	return
+
 def fx(x, y):
 	global natPrey, mortPrey
 	res = (natPrey * x) - (mortPrey * x * y)
@@ -25,8 +34,50 @@ def fy(x, y):
 	res = -(mortPred * y) + (natPred * x * y)
 	return res
 
+def BDF2(b, xVec, yVec, passos, a = 0):
+	# atual, anterior, proximo
+	h = (b - a) / passos
+	
+	X = xVec[-1]
+	Y = yVec[-1]
+
+	# inicialização rk2
+	atualx = X + (h/2) * fx(X, Y)
+	atualy = Y + (h/2) * fx(X, Y)
+	anteriorx = X
+	anteriory = Y
+
+	vPreyBDF2.append(atualx)
+	vPredBDF2.append(atualy)
+
+	for i in range (passos-1):
+		# predicao euler
+		# proximox = atualx + (h * fx(atualx, atualy))
+		# proximoy = atualx + (h * fy(atualx, atualy))
+
+		#predicao RK2
+		proximox = atualx + ((h/2) * fx(atualx, atualy))
+		proximoy = atualx + ((h/2) * fy(atualx, atualy))
+		
+		# correcao
+		proximox = (1/3) * ((4 * atualx) - anteriorx + (2 * h * fx(proximox, proximoy)))
+		proximoy = (1/3) * ((4 * atualy) - anteriory + (2 * h * fy(proximox, proximoy)))
+
+		anteriorx = atualx
+		anteriory = atualy
+
+		atualx = proximox
+		atualy = proximoy
+
+		vPreyBDF2.append(atualx)
+		vPredBDF2.append(atualy)
+
+	return
+
+		
+
 def RK4(b, xVec, yVec, passos, a = 0): #f(t, x(t)) = ax(t) - bx(t)y(t)
-	h = (b - a) / passos;
+	h = (b - a) / passos
 	for i in range (passos):
 		t = h * i
 		X = xVec[-1]
@@ -47,8 +98,8 @@ def RK4(b, xVec, yVec, passos, a = 0): #f(t, x(t)) = ax(t) - bx(t)y(t)
 		X = X + (KX1 + (2 * KX2) + 2 * KX3 + KX4)/6.0
 		Y = Y + (KY1 + (2 * KY2) + 2 * KY3 + KY4)/6.0
 		
-		vPrey.append(X)
-		vPred.append(Y)
+		vPreyRK4.append(X)
+		vPredRK4.append(Y)
 		vTempo.append(t)
 	return
 
@@ -60,8 +111,11 @@ presa = 50
 predador = 10
 
 #aqui a gente vai armazenar os resultados pra dps plotar
-vPrey = [presa]
-vPred = [predador]
+vPreyRK4 = [presa]
+vPredRK4 = [predador]
+
+vPreyBDF2 = [presa]
+vPredBDF2 = [predador]
 vTempo = []
 
 '''as taxas de natalidade/mortalidade dos bichanos
@@ -71,9 +125,12 @@ mortPrey = 0.02
 mortPred= 0.9
 natPred = 0.03
 
-RK4(deltat, vPrey, vPred, passo)
+RK4(deltat, vPreyRK4, vPredRK4, passo)
+BDF2(deltat, vPreyBDF2, vPredBDF2, passo)
 
-print(vPrey)
-print(vPred)
+print(vPreyRK4)
+print(vPredRK4)
+print(vPreyBDF2)
+print(vPredBDF2)
 print(vTempo)
 
