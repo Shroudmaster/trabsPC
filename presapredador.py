@@ -42,8 +42,13 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 	Y = yVec[-1]
 
 	# inicialização rk2
-	atualx = X + (h/2) * fx(X, Y)
-	atualy = Y + (h/2) * fx(X, Y)
+	# atualx = X + (h/2) * fx(X, Y)
+	# atualy = Y + (h/2) * fx(X, Y)
+
+	# muitas inicializações possiveis AAAAA
+	atualx = X + h * fx(X + h/2, Y + h/2)
+	atualy = Y + h * fx(X + h/2, Y + h/2)
+
 	anteriorx = X
 	anteriory = Y
 
@@ -53,12 +58,17 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 	for i in range (passos-1):
 		# predicao euler
 		# proximox = atualx + (h * fx(atualx, atualy))
-		# proximoy = atualx + (h * fy(atualx, atualy))
+		# proximoy = atualy + (h * fy(atualx, atualy))
 
 		#predicao RK2
 		proximox = atualx + ((h/2) * fx(atualx, atualy))
-		proximoy = atualx + ((h/2) * fy(atualx, atualy))
+		proximoy = atualy + ((h/2) * fy(atualx, atualy))
 		
+		# tem muitos metodos
+		#proximox = atualx + (h * fx(atualx + h/2, atualy + h/2))
+		#proximoy = atualy + (h * fy(atualx + h/2, atualy + h/2))
+		
+
 		# correcao
 		proximox = (1/3) * ((4 * atualx) - anteriorx + (2 * h * fx(proximox, proximoy)))
 		proximoy = (1/3) * ((4 * atualy) - anteriory + (2 * h * fy(proximox, proximoy)))
