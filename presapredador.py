@@ -52,7 +52,7 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 	atualx = X + h * ((funx/2) + (funy/2))
 	atualy = Y + h * ((funx/2) + (funy/2))
 
-	print(str(atualx) + ", " + str(atualy))
+	#print(str(atualx) + ", " + str(atualy))
 
 	anteriorx = X
 	anteriory = Y
@@ -116,14 +116,13 @@ def RK4(b, xVec, yVec, passos, a = 0): #f(t, x(t)) = ax(t) - bx(t)y(t)
 deltat = 200 #deve ser suficiente
 passo = 800
 
-#valores iniciais, onde presa deve ser razoavelmente maior q predador MAS NAO MUITO, senao o numero de arrombadinhos cresce exponencialmente (embora ainda falte implementar um sistema de numero maximo de arrombadinhos caso ele exploda)
+#valores iniciais, onde presa deve ser razoavelmente maior q predador MAS NAO MUITO
 presa = 40
 maxPresa = 100
 predador = 10
 
-'''as taxas de natalidade/mortalidade dos bichanos
-to sem um base decente de como chutar esses numeros. As regras gerais que tenho visto sao: natPrey e mortPred devem ser os dois maiores (apesar de q eu n vejo nenhuma razao pros predadores terem uma taxa de mortalidade tao grande, mas enfim) e os outros dois devem ser tbm beeeeeeeeeee menores. Inclusive acho q o valor atual pode estar cagado'''
-natPrey = 0.50 #lembrando que essa porra eh ciclica, ta la no texto grande
+# taxas de mortalidade e natalidade dos bichanos
+natPrey = 0.50 # lembrando que de acord com a especificação isso é cíclico
 mortPrey = 0.05
 mortPred= 0.45
 natPred = 0.0225
@@ -141,6 +140,7 @@ vTempo = [0]
 coef(deltat, passo)
 RK4(deltat, vPreyRK4, vPredRK4, passo)
 BDF2(deltat, vPreyBDF2, vPredBDF2, passo)
+
 '''
 print(vPreyRK4)
 print(vPredRK4)
@@ -165,4 +165,3 @@ plt.xlabel('tempo')
 plt.ylabel('populacao')
 plt.legend()
 plt.show()
-
