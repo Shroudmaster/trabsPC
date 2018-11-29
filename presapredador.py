@@ -35,17 +35,24 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 	X = xVec[-1]
 	Y = yVec[-1]
 
+	### Contas antigas ###
+	#atualx = X + (h/2) * fx(X + h, Y + (h * funx), 0)
+	#atualy = Y + (h/2) * fy(X + h, Y + (h * funy))
+	#print(str(atualx) + ", " + str(atualy))
+
+	#a1 = 1/2
+	#a2 = 1/2
+	#p1 = 1
+	#q1 = 1
+
 	# inicialização 
 	funx = fx(X, Y, 0)
-	funy = fy(X, Y)
-	atualx = X + (h/2) * fx(X + h, Y + (h * funx), 0)
-	atualy = Y + (h/2) * fy(X + h, Y + (h * funy))
+	funy = fy(X + h, Y + funx * h)
 
-	#print(str(atualx) + ", " + str(atualy))
-	# muitas inicializações possiveis AAAAA
-	#atualx = X + h * fx(X + h/2, Y + h/2, 0)
-	#atualy = Y + h * fy(X + h/2, Y + h/2, 0)
-	#print(str(atualx) + ", " + str(atualy))
+	atualx = X + h * ((funx/2) + (funy/2))
+	atualy = Y + h * ((funx/2) + (funy/2))
+
+	print(str(atualx) + ", " + str(atualy))
 
 	anteriorx = X
 	anteriory = Y
@@ -57,9 +64,9 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 
 		#predicao RK2
 		funx = fx(atualx, atualy, i)
-		funy = fy(atualx, atualy)
-		proximox = atualx + ((h/2) * fx(atualx + h, atualy + (h * funx), i))
-		proximoy = atualy + ((h/2) * fy(atualx + h, atualy + (h * funy)))
+		funy = fy(atualx + h, atualy + funx * h)
+		proximox = atualx + h * ((funx/2) + (funy/2))
+		proximoy = atualy + h * ((funx/2) + (funy/2))
 		
 		# tem muitos metodos
 		#proximox = atualx + (h * fx(atualx + h/2, atualy + h/2))
