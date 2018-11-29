@@ -1,5 +1,5 @@
 from math import *
-from matplotlib import *
+import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
@@ -7,7 +7,7 @@ def coef(b, passos, a = 0):
 	global natPrey
 
 	h = (b - a) / passos
-	for i in range(1, passos - 1):
+	for i in range(1, passos):
 		t = h * i
 		aux = (1.5 + np.sin(t)) * natPrey
 		vTempo.append(t)
@@ -41,11 +41,11 @@ def BDF2(b, xVec, yVec, passos, a = 0):
 	atualx = X + (h/2) * fx(X + h, Y + (h * funx), 0)
 	atualy = Y + (h/2) * fy(X + h, Y + (h * funy))
 
-	print(str(atualx) + ", " + str(atualy))
+	#print(str(atualx) + ", " + str(atualy))
 	# muitas inicializações possiveis AAAAA
 	#atualx = X + h * fx(X + h/2, Y + h/2, 0)
-	#atualy = Y + h * fx(X + h/2, Y + h/2, 0)
-	print(str(atualx) + ", " + str(atualy))
+	#atualy = Y + h * fy(X + h/2, Y + h/2, 0)
+	#print(str(atualx) + ", " + str(atualy))
 
 	anteriorx = X
 	anteriory = Y
@@ -106,20 +106,20 @@ def RK4(b, xVec, yVec, passos, a = 0): #f(t, x(t)) = ax(t) - bx(t)y(t)
 		vPredRK4.append(Y)
 	return
 
-deltat = 2 #deve ser suficiente
-passo = 4
+deltat = 200 #deve ser suficiente
+passo = 800
 
 #valores iniciais, onde presa deve ser razoavelmente maior q predador MAS NAO MUITO, senao o numero de arrombadinhos cresce exponencialmente (embora ainda falte implementar um sistema de numero maximo de arrombadinhos caso ele exploda)
-presa = 45
-maxPresa = 200
+presa = 40
+maxPresa = 100
 predador = 10
 
 '''as taxas de natalidade/mortalidade dos bichanos
 to sem um base decente de como chutar esses numeros. As regras gerais que tenho visto sao: natPrey e mortPred devem ser os dois maiores (apesar de q eu n vejo nenhuma razao pros predadores terem uma taxa de mortalidade tao grande, mas enfim) e os outros dois devem ser tbm beeeeeeeeeee menores. Inclusive acho q o valor atual pode estar cagado'''
-natPrey = 1.0 #lembrando que essa porra eh ciclica, ta la no texto grande
-mortPrey = 0.1
-mortPred= 0.9
-natPred = 0.045
+natPrey = 0.50 #lembrando que essa porra eh ciclica, ta la no texto grande
+mortPrey = 0.05
+mortPred= 0.45
+natPred = 0.0225
 
 #aqui a gente vai armazenar os resultados pra dps plotar
 vPreyRK4 = [presa]
@@ -134,10 +134,28 @@ vTempo = [0]
 coef(deltat, passo)
 RK4(deltat, vPreyRK4, vPredRK4, passo)
 BDF2(deltat, vPreyBDF2, vPredBDF2, passo)
-
+'''
 print(vPreyRK4)
 print(vPredRK4)
 print(vPreyBDF2)
 print(vPredBDF2)
 print(vTempo)
+'''
+
+plt.figure("Modelo Lotka-Volterra", figsize=(8,5))
+plt.title("Análise de Resultados")
+plt.plot(vTempo, vPreyBDF2, label='presaBDF2')
+plt.plot(vTempo, vPredBDF2, label='predadorBDF2')
+plt.xlabel('tempo')
+plt.ylabel('populacao')
+plt.legend()
+
+plt.figure("Modelo Lotka-Volterra", figsize=(8,5))
+plt.title("Análise de Resultados")
+plt.plot(vTempo, vPreyRK4, label='presaRK4')
+plt.plot(vTempo, vPredRK4, label='predadorRK4')
+plt.xlabel('tempo')
+plt.ylabel('populacao')
+plt.legend()
+plt.show()
 
